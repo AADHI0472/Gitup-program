@@ -1,0 +1,47 @@
+#include <LiquidCrystal_I2C.h>  // Include the LCD library
+
+// Pin Configuration
+const int voltagePin = A0;  // Voltage sensor connected to analog pin A0
+const int currentPin = A1;  // Current sensor connected to analog pin A1
+
+// LCD Configuration
+LiquidCrystal_I2C lcd(0x27, 16, 2);  // Set the LCD address to 0x27 for a 16 chars and 2-line display
+
+void setup() {
+  // Initialize the LCD
+  lcd.begin();
+  lcd.backlight();
+  
+  // Print to LCD
+  lcd.setCursor(0, 0);
+  lcd.print("Energy Monitor");
+
+  delay(2000);  // Wait for 2 seconds
+}
+
+void loop() {
+  // Read the values from the sensors
+  int voltageValue = analogRead(voltagePin);
+  int currentValue = analogRead(currentPin);
+
+  // Convert the analog values to voltage and current
+  float voltage = (voltageValue / 1024.0) * 5.0 * 10; // Assume a scaling factor (modify based on your voltage sensor)
+  float current = (currentValue / 1024.0) * 5.0 * 10; // Scaling factor for current sensor
+
+  // Calculate the power (in watts)
+  float power = voltage * current;
+
+  // Display the readings on the LCD
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("Voltage: ");
+  lcd.print(voltage);
+  lcd.print(" V");
+
+  lcd.setCursor(0, 1);
+  lcd.print("Power: ");
+  lcd.print(power);
+  lcd.print(" W");
+
+  delay(1000);  // Update the display every second
+}
